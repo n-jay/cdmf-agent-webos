@@ -1,10 +1,10 @@
 {
-  "id": "com.wso2agent.app",
+  "id": "com.wso2.app",
   "version": "0.0.1",
   "vendor": "My Company",
   "type": "web",
   "main": "index.html",
-  "title": "WSO2Agent",
+  "title": "wso2Agent",
   "icon": "icon.png",
   "iconColor": "orange",
   "largeIcon": "largeIcon.png",
