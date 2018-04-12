@@ -1,12 +1,12 @@
 {
-  "id": "com.wso2.app",
-  "version": "0.0.1",
-  "vendor": "My Company",
-  "type": "web",
-  "main": "index.html",
-  "title": "wso2Agent",
-  "icon": "icon.png",
-  "iconColor": "orange",
-  "largeIcon": "largeIcon.png",
-  "uiRevision": 2
+    "vendor": "WSO2",
+    "iconColor": "orange",
+    "largeIcon": "largeIcon.png",
+    "icon": "icon.png",
+    "main": "index.html",
+    "id": "com.wso2.app",
+    "title": "MDMAgent",
+    "type": "web",
+    "version": "0.0.1",
+    "uiRevision":2
 }
