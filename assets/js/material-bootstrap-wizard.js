@@ -154,7 +154,7 @@ $(document).ready(function(){
 
     document.getElementById("userTab").disabled = true;
     document.getElementById("serverTab").disabled = true;
-});
+});	
 
 
 

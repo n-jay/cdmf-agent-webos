@@ -45,7 +45,7 @@
 
 		                    	<div class="wizard-header">
 		                        	<h3 class="wizard-title">
-		                        		Enrollment Wizard
+		                        		Enrollment Wizard <span id="temp"></span>
 		                        	</h3>
 									<h5>This information will allow the server to know about your device.</h5>
 		                    	</div>
@@ -146,9 +146,9 @@
 	                        	<div class="wizard-footer">
 	                            	<div class="pull-right">
 	                                    <input type='button' class='btn btn-next btn-fill btn-warning btn-wd'
-											   name='next' value='Next' />
+											   name='next' value='Next' id="next"/>
 	                                    <input type='button' class='btn btn-finish btn-fill btn-warning btn-wd'
-											   name='finish' value='Finish' />
+											   name='finish' value='Finish' id="finish"/>
 	                                </div>
 	                                <div class="pull-left">
 	                                    <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
@@ -184,16 +184,63 @@
 	<script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
 	<script type="text/javascript">
 	   //sample code for calling LS2 API
-       var lunaReq= webOS.service.request("luna://com.palm.systemservice",
-        {
-            method:"clock/getTime",
-            parameters:{},
-            onSuccess: function (args) {
-				console.log("UTC:", args.utc);
-            },
-            onFailure: function (args) {
-            	console.log("Fail");
-            }
-        });
+	   $(document).ready(function() {
+           console.log( "ready!" );
+           
+           $("#next").click(function() {
+    		   request();
+    	   });
+           
+           var lunaReq= webOS.service.request("luna://com.palm.systemservice",
+      	        {
+      	            method:"clock/getTime",
+      	            parameters:{},
+      	            onSuccess: function (args) {
+      					console.log("UTC:", args.utc);
+      	            },
+      	            onFailure: function (args) {
+      	            	console.log("Fail");
+      	         }
+        	});
+          
+           
+           	function request() {
+           		
+           		var data = { 
+        				"name" : "devicename1",
+        				"type" : "webOS",
+        				"description" : "descritption",
+        				"deviceIdentifier" : "1234",
+        				"enrolmentInfo" : {
+        					"ownership" : "BYOD",
+        					"status" : "ACTIVE"
+        				},
+        				"properties" : [ {
+        					"name" : "propertyName",
+        					"value" : "propertyValue"
+        				} ]
+        		};
+
+				$.ajax({
+					type : "POST",
+					url : "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll",
+					headers: {
+						'accept': 'application/json',
+						'authorization': 'Bearer 08284168-e537-3c16-8b0e-78ce76be8ae0',
+						'content-type': 'application/json'
+					},
+					data : JSON.stringify(data),
+					success: function() {
+						alert("success");
+					},
+					fail: function() {
+						alert("fail");
+					},
+					contentType: "application/json",
+				});
+           	};
+		});
+
+		//document.getElementById("nextBtn").addEventListener("click", enroll);
 	</script>
 </html>
