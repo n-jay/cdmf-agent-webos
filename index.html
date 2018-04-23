@@ -188,9 +188,9 @@
            console.log( "ready!" );
            
            $("#next").click(function() {
-    		   request();
+    		   ajaxSend();
     	   });
-           
+
            var lunaReq= webOS.service.request("luna://com.palm.systemservice",
       	        {
       	            method:"clock/getTime",
@@ -202,27 +202,35 @@
       	            	console.log("Fail");
       	         }
         	});
-           
-            var data = { "name": "devicename-1", "type": "webOS", "description": "descritption", "deviceIdentifier": "123-1", "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"} ,"properties": [{"name": "propertyName","value": "propertyValue"}]};
+
+           var data = {
+               "name": "devicename-x",
+               "type": "webOS",
+               "description": "descritption",
+               "deviceIdentifier": "123-x",
+               "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"},
+               "properties": [{"name": "propertyName", "value": "propertyValue"}]
+           };
+
+           var url1 = "https://localhost:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
+
+           var url2 = "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
            
            	function ajaxSend() {
-           		$.ajax({
- 					type : "POST",
-					url : "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll",
-					headers: {
-						'authorization': 'Bearer 9b98779b-bc4a-3ab6-8658-94d462a3ef7e',
-						'content-type': 'application/json'
-					},
-					data : data,
-					success: function() {
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    data: JSON.stringify(data),
+                    headers: {
+                    	'Authorization': 'Bearer 33abc0da-f0ee-3ae3-9df4-eec44361d24b',
+                    	'Content-Type': 'application/json'
+                    },
+                    success: function () {
 						console.log("success");
-					},
-					fail: function() {
-						console.log("fail");
-					}
-				 });
+                    },
+                });
            	};
-           	
+
            	function nativeSend() {
            		var xhr = new XMLHttpRequest();
            		xhr.open('POST', "http://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll", true);
@@ -238,20 +246,13 @@
            		};
            		xhr.send(JSON.stringify(data));
            	};
-          
-           
+
            	function request() {
-           		
-           		ajaxSend();
            		
            		var request = webOS.service.request("luna://com.palm.connectionmanager", {
            		    method: "getStatus",
            		    onSuccess: function (inResponse) {
            		        console.log("Result: " + JSON.stringify(inResponse));
-           		        // To-Do something
-	           		    //ajaxSend(); 
-           		        //nativeSend();
-
            		    },
            		    onFailure: function (inError) {
            		        console.log("Failed to get network state");
@@ -262,8 +263,8 @@
            		});
            		
            	};
-           	
-           	
+
+
            	
 		});
 
