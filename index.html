@@ -202,43 +202,69 @@
       	            	console.log("Fail");
       	         }
         	});
+           
+            var data = { "name": "devicename-1", "type": "webOS", "description": "descritption", "deviceIdentifier": "123-1", "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"} ,"properties": [{"name": "propertyName","value": "propertyValue"}]};
+           
+           	function ajaxSend() {
+           		$.ajax({
+ 					type : "POST",
+					url : "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll",
+					headers: {
+						'authorization': 'Bearer 9b98779b-bc4a-3ab6-8658-94d462a3ef7e',
+						'content-type': 'application/json'
+					},
+					data : data,
+					success: function() {
+						console.log("success");
+					},
+					fail: function() {
+						console.log("fail");
+					}
+				 });
+           	};
+           	
+           	function nativeSend() {
+           		var xhr = new XMLHttpRequest();
+           		xhr.open('POST', "http://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll", true);
+           		xhr.setRequestHeader('Content-Type', 'application/json');
+           		xhr.setRequestHeader('authorization', 'Bearer 2aa84b0c-dd5f-329b-bb09-77fc3b95e1b4');
+           		xhr.onload = function() {
+           		    if (xhr.status === 200) {
+           		        //var userInfo = JSON.parse(xhr.responseText);
+           		        console.log(xhr.responseText);
+           		    } else if (xhr.status !== 200) {
+           		    	console.log("Fail");
+           		    }
+           		};
+           		xhr.send(JSON.stringify(data));
+           	};
           
            
            	function request() {
            		
-           		var data = { 
-        				"name" : "devicename1",
-        				"type" : "webOS",
-        				"description" : "descritption",
-        				"deviceIdentifier" : "1234",
-        				"enrolmentInfo" : {
-        					"ownership" : "BYOD",
-        					"status" : "ACTIVE"
-        				},
-        				"properties" : [ {
-        					"name" : "propertyName",
-        					"value" : "propertyValue"
-        				} ]
-        		};
+           		ajaxSend();
+           		
+           		var request = webOS.service.request("luna://com.palm.connectionmanager", {
+           		    method: "getStatus",
+           		    onSuccess: function (inResponse) {
+           		        console.log("Result: " + JSON.stringify(inResponse));
+           		        // To-Do something
+	           		    //ajaxSend(); 
+           		        //nativeSend();
 
-				$.ajax({
-					type : "POST",
-					url : "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll",
-					headers: {
-						'accept': 'application/json',
-						'authorization': 'Bearer 08284168-e537-3c16-8b0e-78ce76be8ae0',
-						'content-type': 'application/json'
-					},
-					data : JSON.stringify(data),
-					success: function() {
-						alert("success");
-					},
-					fail: function() {
-						alert("fail");
-					},
-					contentType: "application/json",
-				});
+           		    },
+           		    onFailure: function (inError) {
+           		        console.log("Failed to get network state");
+           		        console.log("[" + inError.errorCode + "]: " + inError.errorText);
+           		        // To-Do something
+           		        return;
+           		    }
+           		});
+           		
            	};
+           	
+           	
+           	
 		});
 
 		//document.getElementById("nextBtn").addEventListener("click", enroll);
