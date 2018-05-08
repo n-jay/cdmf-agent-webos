@@ -189,8 +189,6 @@
            
            $("#next").click(function() {
     		   ajaxSend();
-    		   
-        	  
     	   });
 
            var lunaReq= webOS.service.request("luna://com.palm.systemservice",
@@ -205,18 +203,18 @@
       	         }
         	});
 
+
+           // working code for AJAX request
            var data = {
-               "name": "devicename3",
+               "name": "devicename4",
                "type": "webOS",
                "description": "descritption",
-               "deviceIdentifier": "1233",
+               "deviceIdentifier": "1234",
                "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"},
                "properties": [{"name": "propertyName", "value": "propertyValue"}]
            };
 
            var url1 = "http://10.100.4.109:8280/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
-
-           var url2 = "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
            
            	function ajaxSend() {
                 $.ajax({
@@ -224,7 +222,7 @@
                     url: url1,
                     data: JSON.stringify(data),
                     headers: {
-                    	'Authorization': 'Bearer 6ab874c9-ee83-3880-aa08-3f9e85b3bd2b',
+                    	'Authorization': 'Bearer a2fb9554-82d5-3c96-965f-3725724b7c38',
                     	'Content-Type': 'application/json'
                     },
                     success: function () {
@@ -233,43 +231,24 @@
                 });
            	};
 
-           	function nativeSend() {
-           		var xhr = new XMLHttpRequest();
-           		xhr.open('POST', "http://10.100.4.109:8280/api/device-mgt/v1.0/device/agent/1.0.0/enroll", true);
-           		xhr.setRequestHeader('Content-Type', 'application/json');
-           		xhr.setRequestHeader('authorization', 'Bearer 6ab874c9-ee83-3880-aa08-3f9e85b3bd2b');
-           		xhr.onload = function() {
-           		    if (xhr.status === 200) {
-           		        //var userInfo = JSON.parse(xhr.responseText);
-           		        console.log(xhr.responseText);
-           		    } else if (xhr.status !== 200) {
-           		    	console.log("Fail");
-           		    }
-           		};
-           		xhr.send(JSON.stringify(data));
-           	};
 
-           	function request() {
-           		
-           		var request = webOS.service.request("luna://com.palm.connectionmanager", {
-           		    method: "getStatus",
-           		    onSuccess: function (inResponse) {
-           		        console.log("Result: " + JSON.stringify(inResponse));
-           		    },
-           		    onFailure: function (inError) {
-           		        console.log("Failed to get network state");
-           		        console.log("[" + inError.errorCode + "]: " + inError.errorText);
-           		        // To-Do something
-           		        return;
-           		    }
-           		});
-           		
-           	};
+           function request() {
+               var request = webOS.service.request("luna://com.palm.connectionmanager", {
+                   method: "getStatus",
+                   onSuccess: function (inResponse) {
+                       console.log("Result: " + JSON.stringify(inResponse));
+                   },
+                   onFailure: function (inError) {
+                       console.log("Failed to get network state");
+                       console.log("[" + inError.errorCode + "]: " + inError.errorText);
+                       // To-Do something
+                       return;
+                   }
+               });
 
+           };
 
-           	
 		});
 
-		//document.getElementById("nextBtn").addEventListener("click", enroll);
 	</script>
 </html>
