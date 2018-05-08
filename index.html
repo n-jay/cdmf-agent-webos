@@ -189,6 +189,8 @@
            
            $("#next").click(function() {
     		   ajaxSend();
+    		   
+        	  
     	   });
 
            var lunaReq= webOS.service.request("luna://com.palm.systemservice",
@@ -204,15 +206,15 @@
         	});
 
            var data = {
-               "name": "devicename-x",
+               "name": "devicename3",
                "type": "webOS",
                "description": "descritption",
-               "deviceIdentifier": "123-x",
+               "deviceIdentifier": "1233",
                "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"},
                "properties": [{"name": "propertyName", "value": "propertyValue"}]
            };
 
-           var url1 = "https://localhost:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
+           var url1 = "http://10.100.4.109:8280/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
 
            var url2 = "https://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
            
@@ -222,7 +224,7 @@
                     url: url1,
                     data: JSON.stringify(data),
                     headers: {
-                    	'Authorization': 'Bearer 33abc0da-f0ee-3ae3-9df4-eec44361d24b',
+                    	'Authorization': 'Bearer 6ab874c9-ee83-3880-aa08-3f9e85b3bd2b',
                     	'Content-Type': 'application/json'
                     },
                     success: function () {
@@ -233,9 +235,9 @@
 
            	function nativeSend() {
            		var xhr = new XMLHttpRequest();
-           		xhr.open('POST', "http://10.100.4.109:8243/api/device-mgt/v1.0/device/agent/1.0.0/enroll", true);
+           		xhr.open('POST', "http://10.100.4.109:8280/api/device-mgt/v1.0/device/agent/1.0.0/enroll", true);
            		xhr.setRequestHeader('Content-Type', 'application/json');
-           		xhr.setRequestHeader('authorization', 'Bearer 2aa84b0c-dd5f-329b-bb09-77fc3b95e1b4');
+           		xhr.setRequestHeader('authorization', 'Bearer 6ab874c9-ee83-3880-aa08-3f9e85b3bd2b');
            		xhr.onload = function() {
            		    if (xhr.status === 200) {
            		        //var userInfo = JSON.parse(xhr.responseText);
