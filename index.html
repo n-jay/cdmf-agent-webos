@@ -182,73 +182,12 @@
 	<script src="assets/js/jquery.validate.min.js"></script>
 	
 	<script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
+	<script src="assets/js/enroll.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	   //sample code for calling LS2 API
 	   $(document).ready(function() {
-           console.log( "ready!" );
-           
-           $("#next").click(function() {
-    		   ajaxSend();
-    	   });
 
-           var lunaReq= webOS.service.request("luna://com.palm.systemservice",
-      	        {
-      	            method:"clock/getTime",
-      	            parameters:{},
-      	            onSuccess: function (args) {
-      					console.log("UTC:", args.utc);
-      	            },
-      	            onFailure: function (args) {
-      	            	console.log("Fail");
-      	         }
-        	});
-
-
-           // working code for AJAX request
-           var data = {
-               "name": "devicename4",
-               "type": "webOS",
-               "description": "descritption",
-               "deviceIdentifier": "1234",
-               "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"},
-               "properties": [{"name": "propertyName", "value": "propertyValue"}]
-           };
-
-           var url1 = "http://10.100.4.109:8280/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
-           
-           	function ajaxSend() {
-                $.ajax({
-                    type: "POST",
-                    url: url1,
-                    data: JSON.stringify(data),
-                    headers: {
-                    	'Authorization': 'Bearer a2fb9554-82d5-3c96-965f-3725724b7c38',
-                    	'Content-Type': 'application/json'
-                    },
-                    success: function () {
-						console.log("success");
-                    },
-                });
-           	};
-
-
-           function request() {
-               var request = webOS.service.request("luna://com.palm.connectionmanager", {
-                   method: "getStatus",
-                   onSuccess: function (inResponse) {
-                       console.log("Result: " + JSON.stringify(inResponse));
-                   },
-                   onFailure: function (inError) {
-                       console.log("Failed to get network state");
-                       console.log("[" + inError.errorCode + "]: " + inError.errorText);
-                       // To-Do something
-                       return;
-                   }
-               });
-
-           };
-
-		});
+	   });
 
 	</script>
 </html>
