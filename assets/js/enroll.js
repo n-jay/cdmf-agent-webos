@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     var deviceId;
+    var accessToken;
 
     // This function gets the system time to use UTC as a device ID in emulator
     var request = webOS.service.request("luna://com.palm.systemservice", {
@@ -33,7 +34,7 @@ $(document).ready(function() {
     });
 
     // This function includes code to generate refresh token
-    function refreshAccessToken(urlToken) {
+    function refreshAccessToken(urlToken, urlEnroll) {
         var refreshTokenBody = "grant_type=password&username=admin&password=admin&scope=" +
             "perm:device:disenroll perm:device:enroll perm:device:modify perm:device:operations perm:device:publish-event";
 
@@ -46,10 +47,10 @@ $(document).ready(function() {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             success: function (resp) {
-                var accessToken = resp.access_token;
-                console.log(accessToken);
-                return accessToken;
+                accessToken = resp.access_token;
+                console.log("!!!!!!!!!!  " + accessToken);
 
+                sendPayload(urlEnroll, accessToken);
             },
         });
     };
@@ -64,8 +65,6 @@ $(document).ready(function() {
             "enrolmentInfo": {"ownership": "BYOD", "status": "ACTIVE"},
             "properties": [{"name": "propertyName", "value": "propertyValue"}]
         };
-
-        console.log(accessToken);
 
         $.ajax({
             type: "POST",
@@ -88,12 +87,11 @@ $(document).ready(function() {
             var serverEndpoint = $("#server_endpoint").val();
 
             // server endpoint = 10.100.4.109:8280
-            var urlEnroll = "http://" + serverEndpoint + "/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
-            var urlToken = "http://" + serverEndpoint + "/token";
+            var urlEnroll = serverEndpoint + "/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
+            var urlToken = serverEndpoint + "/token";
 
+            refreshAccessToken(urlToken, urlEnroll);
 
-            // refreshAccessToken(urlToken);
-            sendPayload(urlEnroll, refreshAccessToken(urlToken));
         });
     };
 
