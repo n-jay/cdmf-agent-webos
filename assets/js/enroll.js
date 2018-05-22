@@ -1,11 +1,6 @@
 $(document).ready(function() {
 
-    var serverEndpoint = $('#endpoint').val();
     var deviceId;
-
-    // server endpoint = 10.100.4.109:8280
-    var urlEnroll = "http://" + serverEndpoint + "/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
-    var urlToken = "http://" + serverEndpoint + "/token";
 
     // This function gets the system time to use UTC as a device ID in emulator
     var request = webOS.service.request("luna://com.palm.systemservice", {
@@ -34,36 +29,35 @@ $(document).ready(function() {
             console.log("Failed to get network state");
             console.log("[" + inError.errorCode + "]: " + inError.errorText);
 
-
         }
     });
 
     // This function includes code to generate refresh token
-    function refreshAccessToken() {
-        var refreshTokenBody = "grant_type=refresh_token&refresh_token=14688303-15ac-32d6-9898-1879a835995d&scope=PRODUCTION";
+    function refreshAccessToken(urlToken) {
+        var refreshTokenBody = "grant_type=password&username=admin&password=admin&scope=" +
+            "perm:device:disenroll perm:device:enroll perm:device:modify perm:device:operations perm:device:publish-event";
 
         $.ajax({
             type: "POST",
             url: urlToken,
             data: refreshTokenBody,
             headers: {
-                'Authorization': 'Basic RmxNVzMyZ2VubzlncE1velNYd1IyaDVmTzhnYTpoT0RmVDNWQTV3R0pDamRmNzAyMlEwcmZ2Zmth',
+                'Authorization': 'Basic Mlk3OExJWHBNNkNKeXl3WHdNZnBVVnA3RXlRYTpQOHJ3el9HNWRnZWlfcVlxWUVZanBvaVgxZVlh',
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             success: function (resp) {
-                console.log(resp);
+                var accessToken = resp.access_token;
+                console.log(accessToken);
+                return accessToken;
+
             },
         });
     };
 
-    // This functions includes the code for device enrollment with server
-    function enroll() {
-        $("#next").click(function() {
-            refreshAccessToken();
-        });
-
+    // This function includes code to send payload data
+    function sendPayload(urlEnroll, accessToken) {
         var data = {
-            "name": "webOS TV",
+            "name": "webOS TV " + deviceId,
             "type": "webOS",
             "description": "description",
             "deviceIdentifier": deviceId,
@@ -71,17 +65,35 @@ $(document).ready(function() {
             "properties": [{"name": "propertyName", "value": "propertyValue"}]
         };
 
+        console.log(accessToken);
+
         $.ajax({
             type: "POST",
             url: urlEnroll,
             data: JSON.stringify(data),
             headers: {
-                'Authorization': 'Bearer 21bbc9e3-c12a-3ec6-ab59-6fa579649329',
+                'Authorization': 'Bearer ' +  accessToken,
                 'Content-Type': 'application/json'
             },
             success: function () {
                 console.log("success");
             },
+        });
+    };
+
+    // This functions includes the code for device enrollment with server
+    function enroll() {
+        $("#next").click(function() {
+
+            var serverEndpoint = $("#server_endpoint").val();
+
+            // server endpoint = 10.100.4.109:8280
+            var urlEnroll = "http://" + serverEndpoint + "/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
+            var urlToken = "http://" + serverEndpoint + "/token";
+
+
+            // refreshAccessToken(urlToken);
+            sendPayload(urlEnroll, refreshAccessToken(urlToken));
         });
     };
 
