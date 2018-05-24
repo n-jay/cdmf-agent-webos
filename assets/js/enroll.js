@@ -4,19 +4,15 @@ $(document).ready(function() {
     var firmwareVersion;
     var model;
 
-    // This function gets system ID information
-    var request = webOS.service.request("luna://com.webos.service.sm", {
-        method: "deviceid/getIDs",
-        parameters: {
-            "idType": ["LGUDID"]
-        },
+    // This function gets the system time to use UTC as a device ID in emulator
+    var requestTime = webOS.service.request("luna://com.palm.systemservice", {
+        method: "time/getSystemTime",
+        parameters: { "subscribe": false },
         onSuccess: function (inResponse) {
-            console.log("Result: " + JSON.stringify(inResponse));
-            // To-Do something
-            deviceId = inResponse.idList[0];
+            deviceId = JSON.stringify(inResponse.utc);
         },
         onFailure: function (inError) {
-            console.log("Failed to get system ID information");
+            console.log("Failed to get system time information");
             console.log("[" + inError.errorCode + "]: " + inError.errorText);
             // To-Do something
         }
@@ -52,7 +48,8 @@ $(document).ready(function() {
                 model = inResponse.modelName;
             } else {
                 console.log("Failed to get TV device information");
-                // To-Do something
+
+                $("#message-board").text("Failed to get TV device information");
             }
         }
     });
@@ -77,6 +74,9 @@ $(document).ready(function() {
                 var obj = JSON.parse(resp);
 
                 retrieveAccessToken(serverEndpoint, username, password, obj["client_id"], obj["client_secret"]);
+            },
+            error: function () {
+                $("#message-board").text("Failed to get client ID and secret");
             }
         });
     };
@@ -99,8 +99,10 @@ $(document).ready(function() {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             success: function (resp) {
-
                 sendDetailsPayload(serverEndpoint, resp.access_token);
+            },
+            error: function () {
+                $("#message-board").text("Failed to retrieve access token");
             }
         });
     };
@@ -126,8 +128,19 @@ $(document).ready(function() {
                 'Authorization': 'Bearer ' +  accessToken,
                 'Content-Type': 'application/json'
             },
-            success: function () {
-                console.log("success");
+            success: function (data, textStatus, xhr) {
+                console.log("success " + xhr.status);
+
+                $("#message-board").text("Enrollment Successful");
+            },
+            error: function (xhr) {
+                console.log("fail " + xhr.status);
+
+                if (xhr.status = 400) {
+                    $("#message-board").text("Enrollment already exists");
+                } else {
+                    $("#message-board").text("Failed to enroll device");
+                }
             }
         });
     };
@@ -136,6 +149,10 @@ $(document).ready(function() {
     function enroll() {
         $("#next").click(function() {
             var serverEndpoint = $("#server_endpoint").val();
+
+            // server endpoint = 10.100.4.109:8280
+            var urlEnroll = serverEndpoint + "/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
+            var urlToken = serverEndpoint + "/token";
 
             $("#finish").click(function() {
                 var username = $("#username").val();
