@@ -4,15 +4,18 @@ $(document).ready(function() {
     var firmwareVersion;
     var model;
 
-    // This function gets the system time to use UTC as a device ID in emulator
-    var requestTime = webOS.service.request("luna://com.palm.systemservice", {
-        method: "time/getSystemTime",
-        parameters: { "subscribe": false },
+    // Get system ID information
+    var request = webOS.service.request("luna://com.webos.service.sm", {
+        method: "deviceid/getIDs",
+        parameters: {
+            "idType": ["LGUDID"]
+        },
         onSuccess: function (inResponse) {
-            deviceId = JSON.stringify(inResponse.utc);
+            console.log("Result: " + JSON.stringify(inResponse));
+            deviceId = inResponse.idList[0].idValue;
         },
         onFailure: function (inError) {
-            console.log("Failed to get system time information");
+            console.log("Failed to get system ID information");
             console.log("[" + inError.errorCode + "]: " + inError.errorText);
             // To-Do something
         }
@@ -28,7 +31,6 @@ $(document).ready(function() {
         onFailure: function (inError) {
             console.log("Failed to get network state");
             console.log("[" + inError.errorCode + "]: " + inError.errorText);
-
         }
     });
 
