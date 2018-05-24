@@ -460,6 +460,12 @@ h2.title {
   font-weight: 300;
   margin: 10px 0 30px;
 }
+.wizard-card .alert-text {
+  color: red;
+  text-align: center;
+  font-weight: 300;
+  margin: 10px 0 30px;
+}
 .wizard-card .choice {
   text-align: center;
   cursor: pointer;
@@ -1718,6 +1724,14 @@ fieldset[disabled] .checkbox, fieldset[disabled] .checkbox input[type=checkbox],
 .checkbox input[type=checkbox][disabled] + .checkbox-material .check:after {
   background-color: rgba(0,0,0, 0.87);
   transform: rotate(-45deg);
+}
+.alert-box {
+  border-radius: 4px;
+  position: absolute;
+  text-align: center;
+  padding: 12px;
+  border-radius: 4px;
+  color: orange;
 }
 
 @keyframes checkbox-on {
