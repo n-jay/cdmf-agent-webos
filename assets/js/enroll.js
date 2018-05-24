@@ -48,7 +48,8 @@ $(document).ready(function() {
                 model = inResponse.modelName;
             } else {
                 console.log("Failed to get TV device information");
-                // To-Do something
+
+                $("#message-board").text("Failed to get TV device information");
             }
         }
     });
@@ -74,6 +75,9 @@ $(document).ready(function() {
 
                 retrieveAccessToken(serverEndpoint, username, password, obj["client_id"], obj["client_secret"]);
             },
+            error: function () {
+                $("#message-board").text("Failed to get client ID and secret");
+            }
         });
     };
 
@@ -95,9 +99,11 @@ $(document).ready(function() {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             success: function (resp) {
-
                 sendDetailsPayload(serverEndpoint, resp.access_token);
             },
+            error: function () {
+                $("#message-board").text("Failed to retrieve access token");
+            }
         });
     };
 
@@ -122,9 +128,20 @@ $(document).ready(function() {
                 'Authorization': 'Bearer ' +  accessToken,
                 'Content-Type': 'application/json'
             },
-            success: function () {
-                console.log("success");
+            success: function (data, textStatus, xhr) {
+                console.log("success " + xhr.status);
+
+                $("#message-board").text("Enrollment Successful");
             },
+            error: function (xhr) {
+                console.log("fail " + xhr.status);
+
+                if (xhr.status = 400) {
+                    $("#message-board").text("Enrollment already exists");
+                } else {
+                    $("#message-board").text("Failed to enroll device");
+                }
+            }
         });
     };
 
