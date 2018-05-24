@@ -4,15 +4,19 @@ $(document).ready(function() {
     var firmwareVersion;
     var model;
 
-    // This function gets the system time to use UTC as a device ID in emulator
-    var requestTime = webOS.service.request("luna://com.palm.systemservice", {
-        method: "time/getSystemTime",
-        parameters: { "subscribe": false },
+    // This function gets system ID information
+    var request = webOS.service.request("luna://com.webos.service.sm", {
+        method: "deviceid/getIDs",
+        parameters: {
+            "idType": ["LGUDID"]
+        },
         onSuccess: function (inResponse) {
-            deviceId = JSON.stringify(inResponse.utc);
+            console.log("Result: " + JSON.stringify(inResponse));
+            // To-Do something
+            deviceId = inResponse.idList[0];
         },
         onFailure: function (inError) {
-            console.log("Failed to get system time information");
+            console.log("Failed to get system ID information");
             console.log("[" + inError.errorCode + "]: " + inError.errorText);
             // To-Do something
         }
@@ -73,7 +77,7 @@ $(document).ready(function() {
                 var obj = JSON.parse(resp);
 
                 retrieveAccessToken(serverEndpoint, username, password, obj["client_id"], obj["client_secret"]);
-            },
+            }
         });
     };
 
@@ -97,7 +101,7 @@ $(document).ready(function() {
             success: function (resp) {
 
                 sendDetailsPayload(serverEndpoint, resp.access_token);
-            },
+            }
         });
     };
 
@@ -124,7 +128,7 @@ $(document).ready(function() {
             },
             success: function () {
                 console.log("success");
-            },
+            }
         });
     };
 
@@ -132,10 +136,6 @@ $(document).ready(function() {
     function enroll() {
         $("#next").click(function() {
             var serverEndpoint = $("#server_endpoint").val();
-
-            // server endpoint = 10.100.4.109:8280
-            var urlEnroll = serverEndpoint + "/api/device-mgt/v1.0/device/agent/1.0.0/enroll";
-            var urlToken = serverEndpoint + "/token";
 
             $("#finish").click(function() {
                 var username = $("#username").val();
