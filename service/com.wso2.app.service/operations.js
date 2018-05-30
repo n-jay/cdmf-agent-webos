@@ -1,0 +1,1 @@
+var Service = require('webos-service');

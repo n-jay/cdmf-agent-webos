@@ -1,0 +1,14 @@
+{
+  "id": "com.wso2.app.service",
+  "description": "Agent operation management service",
+  "services": [{
+      "name": "com.wso2.app.service",
+      "description": "service to manage operations sent to agent"
+      "commands"      :   [{
+          "name"            : "getOperation",
+          "description"     : "retrieved pending operation",
+          "public"          : true
+    }]
+    }
+  ]
+}

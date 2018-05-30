@@ -1,0 +1,11 @@
+{
+  "name": "com.wso2.app.service",
+  "version": "1.0.0",
+  "description": "Agent operation management service",
+  "main": "operations.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wso2",
+  "license": "BSD"
+}
