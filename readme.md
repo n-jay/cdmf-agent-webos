@@ -9,11 +9,11 @@ This Device Management Agent allows you to authenticate and enroll your webOS TV
 - Enroll webOS TV in server
 - View stats of webOS TV device
 
-### webOS TV Device Management Agent current features
+### webOS TV Device Management Agent features under development
 
 - Control volume
 - View currently running app state 
 
 ### Contact
 
-Email developer at nsgaj12@gmail.com
+Contact developer [at this link.](http://forum.webosose.org/u/n-jay/)
